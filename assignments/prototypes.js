@@ -17,16 +17,14 @@
 */
 
 function GameObject(attributes){
-  this.createdAt = attributes.createdAt,
-  this.name = attributes.name,
-  this.dimensions = attributes.dimensions
+  this.createdAt = attributes.createdAt;
+  this.name = attributes.name;
+  this.dimensions = attributes.dimensions;
 }
 
-GameObject.prototype.destroy = function () {
+GameObject.prototype.destroy = function() {
   return `${this.name} was removed from the game!`;
 }
-
-
 
 /*
   === CharacterStats ===
@@ -35,18 +33,18 @@ GameObject.prototype.destroy = function () {
   * should inherit destroy() from GameObject's prototype
 */
 
-function CharacterStats(attrs){
-  this.healthPoints = attrs.healthPoints
-  this.destroy = attrs.destroy; //thinking this will inherit from GameObject ??
+function CharacterStats(attributes){
+  //I NEED TO CALL THE PARENTS IN THE CHILDREN
+  GameObject.call(this, attributes);
+  this.healthPoints = attributes.healthPoints;
 }
+
+CharacterStats.prototype = Object.create(GameObject.prototype)
+//Upon failed attempts to find what it needs CharacterStats defaults to GameObject.
 
 CharacterStats.prototype.takeDamage = function (){
-  return `${this.name} took damage.`
+  return `${this.name} took damage.`;
 }
-
-//SOMETHING GOES HERE TO MAKE THIS WORK...... ?????????????
-CharacterStats.prototype = Object.create(GameObject.prototype) //Upon failed attempts to find what it needs CharacterStats defaults to GameObject.
-
 
 
 /*
@@ -59,18 +57,20 @@ CharacterStats.prototype = Object.create(GameObject.prototype) //Upon failed att
   * should inherit takeDamage() from CharacterStats
 */
  
-function Humanoid(humanAttrs){
-  this.team = humanAttrs.team,
-  this.weapons = humanAttrs.weapons,
-  this.language = humanAttrs.language
+function Humanoid(attributes){
+  CharacterStats.call(this, attributes);
+  this.team = attributes.team,
+  this.weapons = attributes.weapons,
+  this.language = attributes.language
 };
 
+Humanoid.prototype = Object.create(CharacterStats.prototype);
 
 Humanoid.prototype.greet = function (){
   return `${this.name} offers a greeting in ${this.language}`
 };
 
-Humanoid.prototype = Object.create(CharacterStats.prototype);
+
 //don't forget to use Object.create again here.. I think
 
 /*
